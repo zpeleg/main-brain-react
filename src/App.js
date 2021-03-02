@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState } from "react";
-function noop() {}
+function noop() { }
 
 function GuessButton(props) {
   return (
@@ -117,14 +117,16 @@ function App() {
   const GUESS_COUNT = 4;
   const options = ["b", 2, 3, 4, "a"];
 
-  // Not sure this is the correct way to do this, but it's a cool hack
+  // This doesn't work correctly with React.StrictMode
   const [theSecret, _] = useState(
     Array(GUESS_COUNT)
       .fill()
       .map(() => getRandomInt(options.length))
   );
 
+
   const [guessHistory, setGuessHistory] = useState([]);
+  const [didWin, setDidWin] = useState(false);
   function showGuess() {
     const newGuessHistory = guessHistory
       .slice()
@@ -135,6 +137,9 @@ function App() {
         },
       ]);
     setGuessHistory(newGuessHistory);
+    if (newGuessHistory[newGuessHistory.length - 1].result.every(a => a === 'exact')) {
+      setDidWin(true)
+    }
   }
 
   const [choices, setChoices] = useState(Array(GUESS_COUNT).fill(0));
@@ -148,17 +153,30 @@ function App() {
     setChoices(newChoices);
   }
 
+  function HiddenResult(props) {
+    let row;
+    if (!props.result) {
+      row = Array(GUESS_COUNT).fill(0).map((_) => <GuessButton enabled={false} choice='_' />);
+    }
+    else {
+      row = props.result.map((r) => <GuessButton enabled={false} choice={r} />);
+    }
+    return <div>{row}</div>
+  }
+
   return (
     <div className="App">
+      <HiddenResult result={didWin ? guessHistory[guessHistory.length - 1].guess : null} />
       <GuessContainer guessHistory={guessHistory} options={options} />
       <ChoiceRow
         guessCount={GUESS_COUNT}
-        enabled={true}
+        enabled={!didWin}
         options={options}
         changeChoice={changeChoice}
         submit={() => showGuess()}
         choices={choices.map((i) => options[i])}
       />
+      <p>{theSecret.map(x => options[x])}</p>
     </div>
   );
 }
