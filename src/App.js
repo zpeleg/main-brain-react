@@ -5,10 +5,12 @@ function noop() {}
 const baseButtonStyle = {
   height: "3vh",
 };
+
 const buttonStyle = {
   ...baseButtonStyle,
   width: "3vh",
 };
+
 const submitStyle = {
   ...baseButtonStyle,
 };
@@ -151,10 +153,6 @@ function App() {
       .fill()
       .map(() => getRandomInt(options.length))
   );
-
-  function toVisible() {
-    return this.map((i) => options[i]);
-  }
 
   const [guessHistory, setGuessHistory] = useState([]);
   const [didWin, setDidWin] = useState(false);
