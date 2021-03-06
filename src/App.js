@@ -1,12 +1,24 @@
 import "./App.css";
 import { useState } from "react";
-function noop() { }
+function noop() {}
+
+const baseButtonStyle = {
+  height: "3vh",
+};
+const buttonStyle = {
+  ...baseButtonStyle,
+  width: "3vh",
+};
+const submitStyle = {
+  ...baseButtonStyle,
+};
 
 function GuessButton(props) {
   return (
     <button
       enabled={(!props.disabled).toString()}
       onClick={() => (props.onClick ?? noop)()}
+      style={buttonStyle}
     >
       {props.choice}
     </button>
@@ -14,7 +26,11 @@ function GuessButton(props) {
 }
 
 function SubmitButton(props) {
-  return <button onClick={() => props.onClick()}>Submit</button>;
+  return (
+    <button onClick={() => props.onClick()} style={submitStyle}>
+      Submit
+    </button>
+  );
 }
 
 function range(size, startAt = 0) {
@@ -113,6 +129,18 @@ function calculateResult(secret, guess) {
   return result;
 }
 
+function HiddenResult(props) {
+  let row;
+  if (!props.result) {
+    row = Array(props.guessCount)
+      .fill(0)
+      .map((_) => <GuessButton enabled={false} choice="_" />);
+  } else {
+    row = props.result.map((r) => <GuessButton enabled={false} choice={r} />);
+  }
+  return <div>{row}</div>;
+}
+
 function App() {
   const GUESS_COUNT = 4;
   const options = ["b", 2, 3, 4, "a"];
@@ -124,21 +152,26 @@ function App() {
       .map(() => getRandomInt(options.length))
   );
 
+  function toVisible() {
+    return this.map((i) => options[i]);
+  }
 
   const [guessHistory, setGuessHistory] = useState([]);
   const [didWin, setDidWin] = useState(false);
   function showGuess() {
-    const newGuessHistory = guessHistory
-      .slice()
-      .concat([
-        {
-          guess: choices.slice(),
-          result: calculateResult(theSecret, choices),
-        },
-      ]);
+    const newGuessHistory = guessHistory.slice().concat([
+      {
+        guess: choices.slice(),
+        result: calculateResult(theSecret, choices),
+      },
+    ]);
     setGuessHistory(newGuessHistory);
-    if (newGuessHistory[newGuessHistory.length - 1].result.every(a => a === 'exact')) {
-      setDidWin(true)
+    if (
+      newGuessHistory[newGuessHistory.length - 1].result.every(
+        (a) => a === "exact"
+      )
+    ) {
+      setDidWin(true);
     }
   }
 
@@ -153,30 +186,35 @@ function App() {
     setChoices(newChoices);
   }
 
-  function HiddenResult(props) {
-    let row;
-    if (!props.result) {
-      row = Array(GUESS_COUNT).fill(0).map((_) => <GuessButton enabled={false} choice='_' />);
-    }
-    else {
-      row = props.result.map((r) => <GuessButton enabled={false} choice={r} />);
-    }
-    return <div>{row}</div>
-  }
+  const outerStyle = {
+    "text-align": "center",
+    "vertical-align": "center",
+    display: "flex",
+  };
+
+  const innerStyle = {
+    margin: "auto",
+    "text-align": "left",
+  };
 
   return (
-    <div className="App">
-      <HiddenResult result={didWin ? guessHistory[guessHistory.length - 1].guess : null} />
-      <GuessContainer guessHistory={guessHistory} options={options} />
-      <ChoiceRow
-        guessCount={GUESS_COUNT}
-        enabled={!didWin}
-        options={options}
-        changeChoice={changeChoice}
-        submit={() => showGuess()}
-        choices={choices.map((i) => options[i])}
-      />
-      <p>{theSecret.map(x => options[x])}</p>
+    <div className="App" style={outerStyle}>
+      <div style={innerStyle}>
+        <HiddenResult
+          result={didWin ? guessHistory[guessHistory.length - 1].guess : null}
+          guessCount={GUESS_COUNT}
+        />
+        <GuessContainer s guessHistory={guessHistory} options={options} />
+        <ChoiceRow
+          guessCount={GUESS_COUNT}
+          enabled={!didWin}
+          options={options}
+          changeChoice={changeChoice}
+          submit={() => showGuess()}
+          choices={choices.map((i) => options[i])}
+        />
+        <p>{theSecret.map((x) => options[x])}</p>
+      </div>
     </div>
   );
 }
