@@ -1,38 +1,106 @@
-/* .App {
+.base-icon:first-child {
+  margin-left: 6px;
+}
+.base-icon {
+  margin-left: 3px;
+  margin-bottom: 4px;
+  vertical-align: middle;
+}
+body,
+html {
+  height: 100%;
+}
+#root {
+  height: 100%;
+}
+.first-container {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  vertical-align: center;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  height: 100%;
+}
+.my-window {
+  margin: auto;
+  text-align: left;
+  height: 100%;
 }
 
-.App-link {
-  color: #61dafb;
+h1 {
+  font-family: "Shippori Mincho B1", serif;
+}
+/*
+Custom gg circle
+*/
+.gg-circle {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  transform: rotate(45deg) scale(var(--ggs, 1));
+  width: 18px;
+  height: 18px;
+  border: 2px solid;
+  border-radius: 100%;
+}
+/*
+gg unblock
+*/
+.gg-unblock {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  transform: rotate(45deg) scale(var(--ggs, 1));
+  width: 18px;
+  height: 18px;
+  border: 2px solid;
+  border-radius: 100%;
+}
+.gg-unblock::after,
+.gg-unblock::before {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  width: 2px;
+  height: 7px;
+  background: currentColor;
+  border-radius: 5px;
+  left: 6px;
+}
+.gg-unblock::before {
+  top: -2px;
+}
+.gg-unblock::after {
+  bottom: -2px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
+/*
+gg block
+*/
+.gg-block {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  transform: rotate(45deg) scale(var(--ggs, 1));
+  width: 18px;
+  height: 18px;
+  border: 2px solid;
+  border-radius: 100%;
+}
+.gg-block::after,
+.gg-block::before {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  width: 2px;
+  height: 10px;
+  background: currentColor;
+  border-radius: 5px;
+  left: 6px;
+}
+.gg-block::before {
+  top: -1px;
+}
+.gg-block::after {
+  bottom: -1px;
+}

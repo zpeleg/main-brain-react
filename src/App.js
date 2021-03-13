@@ -1,18 +1,29 @@
-import "./App.css";
-import { useState } from "react";
+import './App.css';
+import { useState } from 'react';
 function noop() {}
 
+/*
+TODO:
+* Fix bug wherebthe results are not ordered correctly (need to add sort) - possibly fix this by adding an enum
+* Make the entire thing a fixed table that grows from the bottom to the top, maybe chnage colors of buttons to indicate that they are unfilled
+* Change letters to colors
+* Add help tooltip
+* Add settings menu
+*/
+
 const baseButtonStyle = {
-  height: "3vh",
+  height: '4vh',
+  'font-size': '2.5vh',
 };
 
 const buttonStyle = {
   ...baseButtonStyle,
-  width: "3vh",
+  width: '4vh',
 };
 
 const submitStyle = {
   ...baseButtonStyle,
+  align: 'middle',
 };
 
 function GuessButton(props) {
@@ -40,8 +51,12 @@ function range(size, startAt = 0) {
 }
 
 function ChoiceRow(props) {
+  const style = {
+    position: 'fixed',
+    bottom: '10px',
+  };
   return (
-    <div>
+    <div style={style}>
       {range(props.guessCount).map((i) => (
         <GuessButton
           enabled={props.enabled}
@@ -57,29 +72,37 @@ function ChoiceRow(props) {
 
 function GuessMark(props) {
   const resultStyle = {
-    display: "inline",
+    display: 'inline-block',
   };
   switch (props.result) {
-    case "exact":
-      return <p style={resultStyle}>X</p>;
-    case "correct":
-      return <p style={resultStyle}>O</p>;
-    case "incorrect":
-      return <p style={resultStyle}>.</p>;
+    case 'exact':
+      return <i className="base-icon gg-block" style={resultStyle}></i>;
+    case 'correct':
+      return <i className="base-icon gg-unblock" style={resultStyle}></i>;
+    case 'incorrect':
+      return <i className="base-icon gg-circle" style={resultStyle}></i>;
     default:
-      throw Error("WTF");
+      throw Error('WTF');
   }
 }
 
 function PastGuess(props) {
+  const ggg = {
+    display: 'inline-block',
+  };
+  const parent = {};
   return (
-    <div>
-      {props.guess.map((g, i) => (
-        <GuessButton key={i} enabled={false} choice={props.options[g]} />
-      ))}
-      {props.results.map((r, i) => (
-        <GuessMark key={i} result={r} />
-      ))}
+    <div style={parent}>
+      <div style={ggg}>
+        {props.guess.map((g, i) => (
+          <GuessButton key={i} enabled={false} choice={props.options[g]} />
+        ))}
+      </div>
+      <div style={ggg}>
+        {props.results.map((r, i) => (
+          <GuessMark key={i} result={r} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -111,7 +134,7 @@ function calculateResult(secret, guess) {
   let result = [];
   for (let i = 0; i < secretCopy.length; i++) {
     if (secretCopy[i] === guessCopy[i]) {
-      result.push("exact");
+      result.push('exact');
       secretCopy[i] = -1;
       guessCopy[i] = -1;
     }
@@ -122,9 +145,9 @@ function calculateResult(secret, guess) {
     }
     let indexOf = secretCopy.indexOf(guessCopy[i]);
     if (indexOf === -1) {
-      result.push("incorrect");
+      result.push('incorrect');
     } else {
-      result.push("correct");
+      result.push('correct');
       secretCopy[indexOf] = -1;
     }
   }
@@ -132,20 +155,18 @@ function calculateResult(secret, guess) {
 }
 
 function HiddenResult(props) {
-  let row;
-  if (!props.result) {
-    row = Array(props.guessCount)
-      .fill(0)
-      .map((_) => <GuessButton enabled={false} choice="_" />);
-  } else {
-    row = props.result.map((r) => <GuessButton enabled={false} choice={r} />);
-  }
-  return <div>{row}</div>;
+  return (
+    <div>
+      {props.result.map((r) => (
+        <GuessButton enabled={false} choice={r} />
+      ))}
+    </div>
+  );
 }
 
 function App() {
   const GUESS_COUNT = 4;
-  const options = ["b", 2, 3, 4, "a"];
+  const options = ['a', 'b', 'c', 'd'];
 
   // This doesn't work correctly with React.StrictMode
   const [theSecret, _] = useState(
@@ -166,7 +187,7 @@ function App() {
     setGuessHistory(newGuessHistory);
     if (
       newGuessHistory[newGuessHistory.length - 1].result.every(
-        (a) => a === "exact"
+        (a) => a === 'exact'
       )
     ) {
       setDidWin(true);
@@ -184,23 +205,18 @@ function App() {
     setChoices(newChoices);
   }
 
-  const outerStyle = {
-    "text-align": "center",
-    "vertical-align": "center",
-    display: "flex",
-  };
-
-  const innerStyle = {
-    margin: "auto",
-    "text-align": "left",
-  };
-
   return (
-    <div className="App" style={outerStyle}>
-      <div style={innerStyle}>
+    <div className="first-container">
+      <div className="my-window">
+        <h1>Main Brain</h1>
         <HiddenResult
-          result={didWin ? guessHistory[guessHistory.length - 1].guess : null}
-          guessCount={GUESS_COUNT}
+          result={
+            didWin
+              ? guessHistory[guessHistory.length - 1].guess.map(
+                  (g) => options[g]
+                )
+              : Array(GUESS_COUNT).fill('_')
+          }
         />
         <GuessContainer s guessHistory={guessHistory} options={options} />
         <ChoiceRow
@@ -211,7 +227,7 @@ function App() {
           submit={() => showGuess()}
           choices={choices.map((i) => options[i])}
         />
-        <p>{theSecret.map((x) => options[x])}</p>
+        {/* <p>{theSecret.map((x) => options[x])}</p> */}
       </div>
     </div>
   );
