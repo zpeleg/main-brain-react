@@ -9,6 +9,7 @@ TODO:
 * Change letters to colors
 * Add help tooltip
 * Add settings menu
+* Fix the alignment breaking when the submit button disappears
 */
 
 const baseButtonStyle = {
