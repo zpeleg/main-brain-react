@@ -23,10 +23,11 @@ html {
   margin: auto;
   text-align: left;
   height: 100%;
+  width: 310px;
 }
 
 h1 {
-  font-family: "Shippori Mincho B1", serif;
+  font-family: 'Shippori Mincho B1', serif;
 }
 /*
 Custom gg circle
@@ -56,7 +57,7 @@ gg unblock
 }
 .gg-unblock::after,
 .gg-unblock::before {
-  content: "";
+  content: '';
   display: block;
   box-sizing: border-box;
   position: absolute;
@@ -88,7 +89,7 @@ gg block
 }
 .gg-block::after,
 .gg-block::before {
-  content: "";
+  content: '';
   display: block;
   box-sizing: border-box;
   position: absolute;
@@ -103,4 +104,24 @@ gg block
 }
 .gg-block::after {
   bottom: -1px;
+}
+
+.help {
+  border: 0.5px solid #ccd;
+  background-color: #eef;
+  width: auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 28px;
+  color: #666;
+  font-family: sans-serif;
+  box-shadow: 1px 1px 2px #99a;
+  text-shadow: 1px 1px 2px #aab;
+  float: right;
+  margin-top: 18px;
+  padding-right: -18px;
 }

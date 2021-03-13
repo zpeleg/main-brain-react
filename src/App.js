@@ -10,6 +10,8 @@ TODO:
 * Add help tooltip
 * Add settings menu
 * Fix the alignment breaking when the submit button disappears
+* Replace question mark
+* Recenter everything
 */
 
 const baseButtonStyle = {
@@ -209,6 +211,7 @@ function App() {
   return (
     <div className="first-container">
       <div className="my-window">
+        <div class="help">?</div>
         <h1>Main Brain</h1>
         <HiddenResult
           result={
